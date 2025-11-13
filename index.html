@@ -1,134 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Currency Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .converter {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      width: 320px;
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    input[type="number"], select {
-      width: 100%;
-      padding: 10px 12px;
-      margin: 10px 0 20px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    input[type="number"]:focus, select:focus {
-      border-color: #0077ff;
-    }
-    button {
-      background: #0077ff;
-      color: white;
-      padding: 12px 0;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background: #005fcc;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #0077ff;
-      min-height: 24px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="converter">
-    <h2>Currency Converter</h2>
-    <input type="number" id="amount" placeholder="Amount" min="0" />
-    <select id="fromCurrency">
-      <option value="USD">USD - US Dollar</option>
-      <option value="EUR">EUR - Euro</option>
-      <option value="GBP">GBP - British Pound</option>
-      <option value="INR">INR - Indian Rupee</option>
-      <option value="JPY">JPY - Japanese Yen</option>
-    </select>
-    <select id="toCurrency">
-      <option value="EUR">EUR - Euro</option>
-      <option value="USD">USD - US Dollar</option>
-      <option value="GBP">GBP - British Pound</option>
-      <option value="INR">INR - Indian Rupee</option>
-      <option value="JPY">JPY - Japanese Yen</option>
-    </select>
-    <button id="convertBtn">Convert</button>
-    <div class="result" id="result"></div>
+  <div class="converter-container">
+    <h1>💱 Currency Converter</h1>
+
+    <div class="converter-box">
+      <div class="amount">
+        <label for="amount">Enter Amount</label>
+        <input type="number" id="amount" placeholder="Enter amount" value="1" />
+      </div>
+
+      <div class="dropdowns">
+        <div class="from">
+          <label>From</label>
+          <select id="fromCurrency"></select>
+        </div>
+
+        <div class="to">
+          <label>To</label>
+          <select id="toCurrency"></select>
+        </div>
+      </div>
+
+      <button id="convertBtn">Convert</button>
+
+      <div class="result" id="result">Converted amount will appear here</div>
+    </div>
   </div>
 
-  <script>
-    const amountInput = document.getElementById('amount');
-    const fromCurrency = document.getElementById('fromCurrency');
-    const toCurrency = document.getElementById('toCurrency');
-    const convertBtn = document.getElementById('convertBtn');
-    const resultDiv = document.getElementById('result');
-
-    convertBtn.addEventListener('click', () => {
-      const amount = parseFloat(amountInput.value);
-      if (isNaN(amount) || amount <= 0) {
-        resultDiv.textContent = 'Please enter a valid amount.';
-        return;
-      }
-      const from = fromCurrency.value;
-      const to = toCurrency.value;
-
-      if (from === to) {
-        resultDiv.textContent = 'Please select different currencies.';
-        return;
-      }
-
-      resultDiv.textContent = 'Converting...';
-
-      // Using ExchangeRate-API: https://www.exchangerate-api.com
-      // No API key needed for this free endpoint
-      fetch(`https://open.er-api.com/v6/latest/${from}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.result === 'error') {
-            resultDiv.textContent = 'Error fetching exchange rates.';
-            return;
-          }
-          const rate = data.rates[to];
-          if (!rate) {
-            resultDiv.textContent = 'Conversion rate not available.';
-            return;
-          }
-          const convertedAmount = (amount * rate).toFixed(2);
-          resultDiv.textContent = `${amount} ${from} = ${convertedAmount} ${to}`;
-        })
-        .catch(() => {
-          resultDiv.textContent = 'Error connecting to exchange rate service.';
-        });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
